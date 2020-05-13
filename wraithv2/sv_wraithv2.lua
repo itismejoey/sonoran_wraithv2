@@ -10,12 +10,17 @@
 
 local pluginConfig = Config.plugins["wraithv2"]
 
+wraithLastPlates = { locked = nil, scanned = nil }
+
+exports('cadGetLastPlates', function() return wraithLastPlates end)
+
 CreateThread(function()
     if pluginConfig.isPluginEnabled then
         RegisterNetEvent("wk:onPlateLocked")
         AddEventHandler("wk:onPlateLocked", function(cam, plate, index)
             debugLog(("plate lock: %s - %s - %s"):format(cam, plate, index))
             local source = source
+            wraithLastPlates.locked = { cam = cam, plate = plate, index = index, vehicle = cam.vehicle }
             cadPlateLookup(plate, false, function(data)
                 if data == nil then
                     debugLog("No data returned")
@@ -50,6 +55,7 @@ CreateThread(function()
         AddEventHandler("wk:onPlateScanned", function(cam, plate, index)
             debugLog(("plate scan: %s - %s - %s"):format(cam, plate, index))
             local source = source
+            wraithLastPlates.scanned = { cam = cam, plate = plate, index = index, vehicle = cam.vehicle }
             TriggerEvent("SonoranCAD::wraithv2:PlateScanned", source, reg, cam, plate, index)
             cadPlateLookup(plate, true, function(data)
                 if data ~= nil then
