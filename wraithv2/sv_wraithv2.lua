@@ -28,6 +28,7 @@ CreateThread(function()
                     return
                 end
                 local reg = data.vehicleRegistrations[1] -- scanner is always full lookup
+                local bolos = data.bolos
                 if reg then
                     TriggerEvent("SonoranCAD::wraithv2:PlateLocked", source, reg, cam, plate, index)
                     local mi = reg.person.mi ~= "" and ", "..reg.person.mi or ""
@@ -40,6 +41,18 @@ CreateThread(function()
                         timeout = 45000,
                         layout = "centerLeft"
                     })
+                    if bolos then
+                        if bolos[1].flags then
+                            local flags = table.concat(bolos[1].flags, ",")
+                            TriggerClientEvent("pNotify:SendNotification", source, {
+                                text = ("<b style='color:red'>BOLO ALERT!<br/>Plate: %s<br/>Flags: %s"):format(reg.vehicle.plate, flags),
+                                type = "error",
+                                queue = "bolo",
+                                timeout = 20000,
+                                layout = "centerLeft"
+                            })
+                        end
+                    end
                 else
                     TriggerClientEvent("pNotify:SendNotification", source, {
                         text = "<b style='color:yellow'>"..cam.." ALPR</b><br/>Plate: "..plate.."<br/>Status: Not Registered",
