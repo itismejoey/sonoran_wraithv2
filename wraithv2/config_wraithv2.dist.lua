@@ -15,4 +15,4 @@ local config = {
     isPluginEnabled = false -- disable this plugin by default
 }
 
-Config.RegisterPluginConfig(config.pluginName, config)
+--Config.RegisterPluginConfig(config.pluginName, config)
