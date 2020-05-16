@@ -20,6 +20,7 @@ CreateThread(function()
         AddEventHandler("wk:onPlateLocked", function(cam, plate, index)
             debugLog(("plate lock: %s - %s - %s"):format(cam, plate, index))
             local source = source
+            local ids = GetIdentifiers(source)
             wraithLastPlates.locked = { cam = cam, plate = plate, index = index, vehicle = cam.vehicle }
             cadPlateLookup(plate, false, function(data)
                 if data == nil then
@@ -48,7 +49,7 @@ CreateThread(function()
                         layout = "centerLeft"
                     })
                 end
-            end)
+            end, ids[Config.primaryIdentifier])
         end)
 
         RegisterNetEvent("wk:onPlateScanned")
