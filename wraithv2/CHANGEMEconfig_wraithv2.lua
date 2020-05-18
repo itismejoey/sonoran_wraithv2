@@ -13,6 +13,8 @@ local config = {
 
     -- put your configuration options below
     isPluginEnabled = false -- disable this plugin by default
+    ,useExpires = true -- use vehicle registration expirations, or not
+    ,useMiddleInitial = true -- use middle initials?
 }
 
 --Config.RegisterPluginConfig(config.pluginName, config)
