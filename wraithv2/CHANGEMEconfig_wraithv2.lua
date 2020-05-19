@@ -6,6 +6,7 @@
     Put all needed configuration in this file.
 ]]
 local config = {
+    enabled = false,
     pluginName = "wraithv2", -- name your plugin here
     pluginAuthor = "SonoranCAD", -- author
     requiresPlugins = {"lookups"}, -- required plugins for this plugin to work, separated by commas
@@ -16,4 +17,6 @@ local config = {
     ,useMiddleInitial = true -- use middle initials?
 }
 
---Config.RegisterPluginConfig(config.pluginName, config)
+if config.enabled then
+    Config.RegisterPluginConfig(config.pluginName, config)
+end

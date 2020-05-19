@@ -30,6 +30,7 @@ if pluginConfig.enabled then
                 debugLog(("plate lock: %s - %s - %s"):format(cam, plate, index))
                 local source = source
                 local ids = GetIdentifiers(source)
+                plate = plate:gsub("%s+", "")
                 wraithLastPlates.locked = { cam = cam, plate = plate, index = index, vehicle = cam.vehicle }
                 cadPlateLookup(plate, false, function(data)
                     if data == nil or data.vehicleRegistrations == nil then
@@ -38,12 +39,12 @@ if pluginConfig.enabled then
                     end
                     local reg = false
                     for _, veh in pairs(data.vehicleRegistrations) do
-                        if veh.plate == plate then
-                            reg = plate
+                        if veh.vehicle.plate == plate then
+                            reg = veh
                             break
                         end
                     end
-                    local bolos = data.bolos
+                    local bolos = #data.bolos and data.bolos or false
                     if reg then
                         TriggerEvent("SonoranCAD::wraithv2:PlateLocked", source, reg, cam, plate, index)
                         local plate = reg.vehicle.plate
@@ -58,7 +59,7 @@ if pluginConfig.enabled then
                             timeout = 30000,
                             layout = "centerLeft"
                         })
-                        if bolos then
+                        if #bolos > 0 then
                             if bolos[1].flags then
                                 local flags = table.concat(bolos[1].flags, ",")
                                 TriggerClientEvent("pNotify:SendNotification", source, {
@@ -86,14 +87,16 @@ if pluginConfig.enabled then
             AddEventHandler("wk:onPlateScanned", function(cam, plate, index)
                 debugLog(("plate scan: %s - %s - %s"):format(cam, plate, index))
                 local source = source
+                plate = plate:gsub("%s+", "")
                 wraithLastPlates.scanned = { cam = cam, plate = plate, index = index, vehicle = cam.vehicle }
                 TriggerEvent("SonoranCAD::wraithv2:PlateScanned", source, reg, cam, plate, index)
                 cadPlateLookup(plate, true, function(data)
                     if data ~= nil and data.vehicleRegistrations ~= nil then
                         local reg = false
                         for _, veh in pairs(data.vehicleRegistrations) do
-                            if veh.plate == plate then
-                                reg = plate
+                            print(("check %s = %s ?"):format(veh.plate, plate))
+                            if veh.vehicle.plate == plate then
+                                reg = veh
                                 break
                             end
                         end
