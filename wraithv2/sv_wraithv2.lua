@@ -50,7 +50,7 @@ CreateThread(function()
                     local owner = pluginConfig.useMiddleInitial and ("%s %s, %s"):format(reg.person.first, reg.person.last, reg.person.mi) or ("%s %s"):format(reg.person.first, reg.person.last)
                     
                     TriggerClientEvent("pNotify:SendNotification", source, {
-                        text = ("<b style='color:yellow'>"..cam.." ALPR</b><br/>Plate: %s<br/>Status: %s<br/>%sOwner: %s"):format(plate, status, expires, owner)
+                        text = ("<b style='color:yellow'>"..cam.." ALPR</b><br/>Plate: %s<br/>Status: %s<br/>%sOwner: %s"):format(plate, status, expires, owner),
                         type = "success",
                         queue = "alpr",
                         timeout = 30000,
