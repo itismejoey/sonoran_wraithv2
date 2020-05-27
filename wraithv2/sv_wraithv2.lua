@@ -39,7 +39,7 @@ if pluginConfig.enabled then
                     end
                     local reg = false
                     for _, veh in pairs(data.vehicleRegistrations) do
-                        if veh.vehicle.plate == plate then
+                        if veh.vehicle.plate:lower() == plate:lower() then
                             reg = veh
                             break
                         end
@@ -94,7 +94,7 @@ if pluginConfig.enabled then
                     if data ~= nil and data.vehicleRegistrations ~= nil then
                         local reg = false
                         for _, veh in pairs(data.vehicleRegistrations) do
-                            if veh.vehicle.plate == plate then
+                            if veh.vehicle.plate:lower() == plate:lower() then
                                 reg = veh
                                 break
                             end
