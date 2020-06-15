@@ -30,7 +30,7 @@ if pluginConfig.enabled then
                 debugLog(("plate lock: %s - %s - %s"):format(cam, plate, index))
                 local source = source
                 local ids = GetIdentifiers(source)
-                plate = plate:gsub("^%s*(.-)%s*$", "")
+                plate = plate:match("^%s*(.-)%s*$", "")
                 wraithLastPlates.locked = { cam = cam, plate = plate, index = index, vehicle = cam.vehicle }
                 cadPlateLookup(plate, false, function(data)
                     if cam == "front" then
@@ -96,7 +96,7 @@ if pluginConfig.enabled then
                 end
                 debugLog(("plate scan: %s - %s - %s"):format(cam, plate, index))
                 local source = source
-                plate = plate:gsub("^%s*(.-)%s*$", "")
+                plate = plate:match("^%s*(.-)%s*$")
                 wraithLastPlates.scanned = { cam = cam, plate = plate, index = index, vehicle = cam.vehicle }
                 TriggerEvent("SonoranCAD::wraithv2:PlateScanned", source, reg, cam, plate, index)
                 cadPlateLookup(plate, true, function(data)
