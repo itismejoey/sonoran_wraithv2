@@ -30,7 +30,7 @@ if pluginConfig.enabled then
                 debugLog(("plate lock: %s - %s - %s"):format(cam, plate, index))
                 local source = source
                 local ids = GetIdentifiers(source)
-                plate = plate:match("^%s*(.-)%s*$", "")
+                plate = plate:match("^%s*(.-)%s*$")
                 wraithLastPlates.locked = { cam = cam, plate = plate, index = index, vehicle = cam.vehicle }
                 cadPlateLookup(plate, false, function(data)
                     if cam == "front" then
@@ -109,7 +109,6 @@ if pluginConfig.enabled then
                             end
                         end
                         if reg then
-                            local mi = reg.person.mi ~= "" and ", "..reg.person.mi or ""
                             local plate = reg.vehicle.plate
                             local status = reg.status
                             local expires = (reg.expiration and pluginConfig.useExpires) and ("Expires: %s<br/>"):format(reg.expiration) or ""
