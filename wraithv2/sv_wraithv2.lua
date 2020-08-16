@@ -54,12 +54,11 @@ if pluginConfig.enabled then
                         return
                     end
                     local person = charData[1]
-                    local bolos = #boloData > 0 and boloData or false
                     if reg then
                         TriggerEvent("SonoranCAD::wraithv2:PlateLocked", source, reg, cam, plate, index)
                         local plate = reg.plate
-                        local status = regData["Status"]
-                        local expires = (regData["Expiration"] and pluginConfig.useExpires) and ("Expires: %s<br/>"):format(regData["Expiration"]) or ""
+                        local status = regData[1]["Status"]
+                        local expires = (regData[1]["Expiration"] and pluginConfig.useExpires) and ("Expires: %s<br/>"):format(regData[1]["Expiration"]) or ""
                         local owner = pluginConfig.useMiddleInitial and ("%s %s, %s"):format(person.first, person.last, person.mi) or ("%s %s"):format(person.first, person.last)
                         TriggerClientEvent("pNotify:SendNotification", source, {
                             text = ("<b style='color:yellow'>"..camCapitalized.." ALPR</b><br/>Plate: %s<br/>Status: %s<br/>%sOwner: %s"):format(plate:upper(), status, expires, owner),
@@ -68,10 +67,10 @@ if pluginConfig.enabled then
                             timeout = 30000,
                             layout = "centerLeft"
                         })
-                        if #bolos > 0 then
-                            local flags = table.concat(bolos.flags, ",")
+                        if #boloData > 0 then
+                            local flags = table.concat(boloData, ",")
                             TriggerClientEvent("pNotify:SendNotification", source, {
-                                text = ("<b style='color:red'>BOLO ALERT!<br/>Plate: %s<br/>Flags: %s"):format(reg.vehicle.plate:upper(), flags),
+                                text = ("<b style='color:red'>BOLO ALERT!<br/>Plate: %s<br/>Flags: %s"):format(plate:upper(), flags),
                                 type = "error",
                                 queue = "bolo",
                                 timeout = 20000,
@@ -108,10 +107,6 @@ if pluginConfig.enabled then
                     elseif cam == "rear" then
                         camCapitalized = "Rear"
                     end
-                    if #vehData < 1 then
-                        debugLog("No data returned")
-                        return
-                    end
                     local reg = false
                     for _, veh in pairs(vehData) do
                         if veh.plate:lower() == plate:lower() then
@@ -119,17 +114,15 @@ if pluginConfig.enabled then
                             break
                         end
                     end
-                    if #charData < 1 then
-                        debugLog("Invalid registration")
-                        return
+                    local person = {}
+                    if #charData > 0 then
+                        person = charData[1]
                     end
-                    local person = charData[1]
-                    local bolos = #boloData > 0 and boloData or false
                     if reg then
                         TriggerEvent("SonoranCAD::wraithv2:PlateLocked", source, reg, cam, plate, index)
                         local plate = reg.plate
-                        local status = regData["Status"]
-                        local expires = (regData["Expiration"] and pluginConfig.useExpires) and ("Expires: %s<br/>"):format(regData["Expiration"]) or ""
+                        local status = regData[1]["Status"]
+                        local expires = (regData[1]["Expiration"] and pluginConfig.useExpires) and ("Expires: %s<br/>"):format(regData[1]["Expiration"]) or ""
                         local owner = pluginConfig.useMiddleInitial and ("%s %s, %s"):format(person.first, person.last, person.mi) or ("%s %s"):format(person.first, person.last)
                         if status ~= "VALID" then
                             TriggerClientEvent("pNotify:SendNotification", source, {
@@ -139,16 +132,29 @@ if pluginConfig.enabled then
                                 timeout = 10000,
                                 layout = "centerLeft"
                             })
+                            TriggerEvent("SonoranCAD::wraithv2:BadStatus", plate, status, regData[1]["Expiration"], owner)
+                        end
+                        if #boloData > 0 then
+                            local flags = table.concat(boloData, ",")
+                            TriggerClientEvent("pNotify:SendNotification", source, {
+                                text = ("<b style='color:red'>BOLO ALERT!<br/>Plate: %s<br/>Flags: %s"):format(plate:upper(), flags),
+                                type = "error",
+                                queue = "bolo",
+                                timeout = 20000,
+                                layout = "centerLeft"
+                            })
+                            TriggerEvent("SonoranCAD::wraithv2:BoloAlert", plate, flags)
                         end
                     else
                         if pluginConfig.alertNoRegistration then
                             TriggerClientEvent("pNotify:SendNotification", source, {
                                 text = "<b style='color:yellow'>"..camCapitalized.." ALPR</b><br/>Plate: "..plate:upper().."<br/>Status: Not Registered",
-                                type = "warn",
+                                type = "warning",
                                 queue = "alpr",
                                 timeout = 5000,
                                 layout = "centerLeft"
                             })
+                            TriggerEvent("SonoranCAD::wraithv2:NoRegAlert", plate)
                         end
                     end
                 end)
