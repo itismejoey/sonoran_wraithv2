@@ -55,9 +55,9 @@ if pluginConfig.enabled then
             if reg then
                 TriggerEvent("SonoranCAD::wraithv2:PlateLocked", source, reg, cam, plate, index)
                 local plate = reg.plate
-                local status = regData[1]["Status"]
-                local expires = (regData[1]["Expiration"] and pluginConfig.useExpires) and ("Expires: %s<br/>"):format(regData[1]["Expiration"]) or ""
-                local owner = pluginConfig.useMiddleInitial and ("%s %s, %s"):format(person.first, person.last, person.mi) or ("%s %s"):format(person.first, person.last)
+                local status = regData[1]["status"]
+                local expires = (regData[1]["expiration"] and pluginConfig.useExpires) and ("Expires: %s<br/>"):format(regData[1]["expiration"]) or ""
+                local owner = (pluginConfig.useMiddleInitial and person.mi ~= "") and ("%s %s, %s"):format(person.first, person.last, person.mi) or ("%s %s"):format(person.first, person.last)
                 TriggerClientEvent("pNotify:SendNotification", source, {
                     text = ("<b style='color:yellow'>"..camCapitalized.." ALPR</b><br/>Plate: %s<br/>Status: %s<br/>%sOwner: %s"):format(plate:upper(), status, expires, owner),
                     type = "success",
@@ -119,9 +119,9 @@ if pluginConfig.enabled then
             if reg then
                 TriggerEvent("SonoranCAD::wraithv2:PlateLocked", source, reg, cam, plate, index)
                 local plate = reg.plate
-                local status = regData[1]["Status"]
-                local expires = (regData[1]["Expiration"] and pluginConfig.useExpires) and ("Expires: %s<br/>"):format(regData[1]["Expiration"]) or ""
-                local owner = pluginConfig.useMiddleInitial and ("%s %s, %s"):format(person.first, person.last, person.mi) or ("%s %s"):format(person.first, person.last)
+                local status = regData[1]["status"]
+                local expires = (regData[1]["expiration"] and pluginConfig.useExpires) and ("Expires: %s<br/>"):format(regData[1]["expiration"]) or ""
+                local owner = (pluginConfig.useMiddleInitial and person.mi ~= "") and ("%s %s, %s"):format(person.first, person.last, person.mi) or ("%s %s"):format(person.first, person.last)
                 if status ~= "VALID" then
                     TriggerClientEvent("pNotify:SendNotification", source, {
                         text = ("<b style='color:yellow'>"..camCapitalized.." ALPR</b><br/>Plate: %s<br/>Status: %s<br/>%sOwner: %s"):format(plate:upper(), status, expires, owner),
@@ -130,7 +130,7 @@ if pluginConfig.enabled then
                         timeout = 10000,
                         layout = "centerLeft"
                     })
-                    TriggerEvent("SonoranCAD::wraithv2:BadStatus", plate, status, regData[1]["Expiration"], owner)
+                    TriggerEvent("SonoranCAD::wraithv2:BadStatus", plate, status, regData[1]["expiration"], owner)
                 end
                 if #boloData > 0 then
                     local flags = table.concat(boloData, ",")
