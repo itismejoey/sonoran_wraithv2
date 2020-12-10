@@ -55,6 +55,19 @@ if pluginConfig.enabled then
             if reg then
                 TriggerEvent("SonoranCAD::wraithv2:PlateLocked", source, reg, cam, plate, index)
                 local plate = reg.plate
+                if regData == nil then
+                    debugLog("regData is nil, skipping plate lock.")
+                    return
+                end
+                if regData[1] == nil then
+                    debugLog("regData is empty, skipping")
+                    return
+                end
+                if regData[1].status == nil then
+                    warnLog(("Plate %s was scanned by %s, but status was nil. Record: %s"):format(plate, source, json.encode(regData[1])))
+                    return
+                end
+                local plate = reg.plate
                 local status = regData[1]["status"]
                 local expires = (regData[1]["expiration"] and pluginConfig.useExpires) and ("Expires: %s<br/>"):format(regData[1]["expiration"]) or ""
                 local owner = (pluginConfig.useMiddleInitial and person.mi ~= "") and ("%s %s, %s"):format(person.first, person.last, person.mi) or ("%s %s"):format(person.first, person.last)
