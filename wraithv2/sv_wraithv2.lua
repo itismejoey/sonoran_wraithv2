@@ -70,7 +70,6 @@ if pluginConfig.enabled then
                 local plate = reg.plate
                 local statusUid = pluginConfig.statusUid ~= nil and pluginConfig.statusUid or "status"
                 local expiresUid = pluginConfig.expiresUid ~= nil and pluginConfig.expiresUid or "expiration"
-                local flagStatuses = pluginConfig.flagOnStatuses ~= nil and pluginConfig.flagOnStatuses or {"STOLEN", "EXPIRED", "PENDING", "SUSPENDED"}
                 local status = regData[1][statusUid]
                 local expires = (regData[1][expiresUid] and pluginConfig.useExpires) and ("Expires: %s<br/>"):format(regData[1][expiresUid]) or ""
                 local owner = (pluginConfig.useMiddleInitial and person.mi ~= "") and ("%s %s, %s"):format(person.first, person.last, person.mi) or ("%s %s"):format(person.first, person.last)
@@ -153,7 +152,7 @@ if pluginConfig.enabled then
                 local status = regData[1][statusUid]
                 local expires = (regData[1][expiresUid] and pluginConfig.useExpires) and ("Expires: %s<br/>"):format(regData[1][expiresUid]) or ""
                 local owner = (pluginConfig.useMiddleInitial and person.mi ~= "") and ("%s %s, %s"):format(person.first, person.last, person.mi) or ("%s %s"):format(person.first, person.last)
-                if status ~= "VALID" and status ~= "" and status ~= nil then
+                if status ~= nil and has_value(flagStatuses, status) then
                     TriggerClientEvent("pNotify:SendNotification", source, {
                         text = ("<b style='color:yellow'>"..camCapitalized.." ALPR</b><br/>Plate: %s<br/>Status: %s<br/>%sOwner: %s"):format(plate:upper(), status, expires, owner),
                         type = "success",
