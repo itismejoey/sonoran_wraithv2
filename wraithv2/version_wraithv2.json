@@ -1,6 +1,7 @@
 {
-    "version": "1.4.5",
+    "version": "1.5.0",
     "check_url": "https://raw.githubusercontent.com/Sonoran-Software/sonoran_wraithv2/master/wraithv2/version_wraithv2.json",
     "download_url": "https://github.com/Sonoran-Software/sonoran_wraithv2/",
-    "configVersion": "1.3"
+    "configVersion": "1.4",
+    "pluginDepends": [{ "name": "lookups", "version": "1.5.1", "critical": true }]
 }
