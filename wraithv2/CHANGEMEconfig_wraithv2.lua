@@ -9,7 +9,7 @@ local config = {
     enabled = false,
     pluginName = "wraithv2", -- name your plugin here
     pluginAuthor = "SonoranCAD", -- author
-    configVersion = "1.4",
+    configVersion = "1.5"
 
     -- use vehicle registration expirations, or not
     ,useExpires = true 
@@ -21,7 +21,7 @@ local config = {
     ,statusUid = "status"
     ,expiresUid = "expiration"
     -- statuses to flag on when scanned
-    ,flagOnStatuses = ["STOLEN", "EXPIRED", "PENDING", "SUSPENDED"]
+    ,flagOnStatuses = {"STOLEN", "EXPIRED", "PENDING", "SUSPENDED"}
 }
 
 if config.enabled then
