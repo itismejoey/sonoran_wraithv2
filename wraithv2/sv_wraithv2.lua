@@ -31,11 +31,7 @@ if pluginConfig.enabled then
         plate = plate:match("^%s*(.-)%s*$")
         wraithLastPlates.locked = { cam = cam, plate = plate, index = index, vehicle = cam.vehicle }
         cadGetInformation(plate, function(regData, vehData, charData, boloData)
-            if cam == "front" then
-                camCapitalized = "Front"
-            elseif cam == "rear" then
-                camCapitalized = "Rear"
-            end
+
             if #vehData < 1 then
                 debugLog("No data returned")
                 return
@@ -74,7 +70,7 @@ if pluginConfig.enabled then
                 local expires = (regData[1][expiresUid] and pluginConfig.useExpires) and ("Expires: %s<br/>"):format(regData[1][expiresUid]) or ""
                 local owner = (pluginConfig.useMiddleInitial and person.mi ~= "") and ("%s %s, %s"):format(person.first, person.last, person.mi) or ("%s %s"):format(person.first, person.last)
                 TriggerClientEvent("pNotify:SendNotification", source, {
-                    text = ("<b style='color:yellow'>"..camCapitalized.." ALPR</b><br/>Plate: %s<br/>Status: %s<br/>%sOwner: %s"):format(plate:upper(), status, expires, owner),
+                    text = ("<b style='color:yellow'>"..cam:upper().." ALPR</b><br/>Plate: %s<br/>Status: %s<br/>%sOwner: %s"):format(plate:upper(), status, expires, owner),
                     type = "success",
                     queue = "alpr",
                     timeout = 30000,
@@ -92,7 +88,7 @@ if pluginConfig.enabled then
                 end
             else
                 TriggerClientEvent("pNotify:SendNotification", source, {
-                    text = "<b style='color:yellow'>"..camCapitalized.." ALPR</b><br/>Plate: "..plate:upper().."<br/>Status: Not Registered",
+                    text = "<b style='color:yellow'>"..cam:upper().." ALPR</b><br/>Plate: "..plate:upper().."<br/>Status: Not Registered",
                     type = "error",
                     queue = "alpr",
                     timeout = 15000,
@@ -104,22 +100,12 @@ if pluginConfig.enabled then
 
     RegisterNetEvent("wk:onPlateScanned")
     AddEventHandler("wk:onPlateScanned", function(cam, plate, index)
-        if cam == "front" then
-            camCapitalized = "Front"
-        elseif cam == "rear" then
-            camCapitalized = "Rear"
-        end
         debugLog(("plate scan: %s - %s - %s"):format(cam, plate, index))
         local source = source
         plate = plate:match("^%s*(.-)%s*$")
         wraithLastPlates.scanned = { cam = cam, plate = plate, index = index, vehicle = cam.vehicle }
         TriggerEvent("SonoranCAD::wraithv2:PlateScanned", source, reg, cam, plate, index)
         cadGetInformation(plate, function(regData, vehData, charData, boloData)
-            if cam == "front" then
-                camCapitalized = "Front"
-            elseif cam == "rear" then
-                camCapitalized = "Rear"
-            end
             local reg = false
             for _, veh in pairs(vehData) do
                 if veh.plate:lower() == plate:lower() then
@@ -154,7 +140,7 @@ if pluginConfig.enabled then
                 local owner = (pluginConfig.useMiddleInitial and person.mi ~= "") and ("%s %s, %s"):format(person.first, person.last, person.mi) or ("%s %s"):format(person.first, person.last)
                 if status ~= nil and has_value(flagStatuses, status) then
                     TriggerClientEvent("pNotify:SendNotification", source, {
-                        text = ("<b style='color:yellow'>"..camCapitalized.." ALPR</b><br/>Plate: %s<br/>Status: %s<br/>%sOwner: %s"):format(plate:upper(), status, expires, owner),
+                        text = ("<b style='color:yellow'>"..cam:upper().." ALPR</b><br/>Plate: %s<br/>Status: %s<br/>%sOwner: %s"):format(plate:upper(), status, expires, owner),
                         type = "success",
                         queue = "alpr",
                         timeout = 10000,
@@ -176,7 +162,7 @@ if pluginConfig.enabled then
             else
                 if pluginConfig.alertNoRegistration then
                     TriggerClientEvent("pNotify:SendNotification", source, {
-                        text = "<b style='color:yellow'>"..camCapitalized.." ALPR</b><br/>Plate: "..plate:upper().."<br/>Status: Not Registered",
+                        text = "<b style='color:yellow'>"..cam:upper().." ALPR</b><br/>Plate: "..plate:upper().."<br/>Status: Not Registered",
                         type = "warning",
                         queue = "alpr",
                         timeout = 5000,
